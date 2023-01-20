@@ -12,6 +12,12 @@ public class PlayerController : MonoBehaviour
     public float acceleration;
     public float decelaration;
 
+    [Header("Layers")]
+    [Space]
+    public int collectiblesLayer;
+
+    public Transform moneySpawnPos;
+
     public static PlayerController Instance;
 
     private void Awake()
@@ -53,5 +59,15 @@ public class PlayerController : MonoBehaviour
         currentSpeed = Mathf.Clamp(currentSpeed, 0, maxSpeed);
 
         transform.position += transform.forward * currentSpeed * Time.deltaTime;
+    }
+
+    private void OnTriggerEnter(Collider col)
+    {
+        if (col.gameObject.layer == collectiblesLayer)
+        {
+            col.gameObject.GetComponent<BoxCollider>().enabled = false;
+            MoneyManager.Instance.StartCoroutine(MoneyManager.Instance.GetMoney());
+
+        }
     }
 }
